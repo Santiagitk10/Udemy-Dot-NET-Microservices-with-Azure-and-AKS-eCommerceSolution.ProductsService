@@ -5,7 +5,6 @@ using FluentValidation.AspNetCore;
 using eCommerce.ProductsMicroService.API.APIEndpoints;
 using System.Text.Json.Serialization;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 //Add DAL and BLL services
@@ -15,27 +14,29 @@ builder.Services.AddBusinessLogicLayer();
 builder.Services.AddControllers();
 
 //FluentValidations
+//Para minimalAPI el AutoValidation no funciona, hay que agregar código para las validaciones de manera manual
 builder.Services.AddFluentValidationAutoValidation();
 
 //Add model binder to read values from JSON to enum
-builder.Services.ConfigureHttpJsonOptions(options => { 
-  options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
-
 
 //Add Swagger services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //Cors
-builder.Services.AddCors(options => {
-  options.AddDefaultPolicy(builder => {
-    builder.WithOrigins("http://localhost:4200")
-    .AllowAnyMethod()
-    .AllowAnyHeader();
-  });
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:4200")
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+    });
 });
-
 
 var app = builder.Build();
 
@@ -48,7 +49,6 @@ app.UseCors();
 //Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
-
 
 //Auth
 app.UseHttpsRedirection();
